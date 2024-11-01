@@ -7,7 +7,7 @@ public class Node {
     private int y;
     private String id;//X-Y
     private Node parent ;
-    private int cost;
+    private double cost;
 
 
 
@@ -102,7 +102,7 @@ public class Node {
     public Node getParent() {
         return parent;
     }
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
 
@@ -124,7 +124,7 @@ public class Node {
     public void setParent(Node parent) {
         this.parent = parent;
     }
-    public void setCost(int cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 

@@ -1,8 +1,8 @@
 public class Edge {
-    private int weight;
+    private double weight;
     private String id; //X1-Y1,X2-Y2
 
-    public Edge(String id, int weight) {
+    public Edge(String id, double weight) {
         this.id = id;
         this.weight = weight;
     }
@@ -22,14 +22,14 @@ public class Edge {
     public String getId() {
         return id;
     }
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
     //setters
     public void setId(String id) {
         this.id = id;
     }
-    public void setWeight(int weight) {
+    public void setWeight(double  weight) {
         this.weight = weight;
     }
     

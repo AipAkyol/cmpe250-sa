@@ -5,39 +5,50 @@ import java.util.ArrayList;
 public class Project {
    
     public static void main(String[] args) throws Exception {
-        //read file one line by line with bufferedReader
-        //parse the first line to get the size of the grid
         
-        String filePath = "/Users/simalguven/VSCodeProjects/CMPE250-Graph/src/4-4.txt";
+        String nodeFilePath = "C:\\BOUN\\cmpe250-sa\\src\\node-4-4.txt";
+        String edgeFilePath = "C:\\BOUN\\cmpe250-sa\\src\\4-4.txt";
+
         
-        File file = new File(filePath);
-        Scanner scanner = new Scanner (file);
+        
+        File nodeFile = new File(nodeFilePath);
+        Scanner nodeScanner = new Scanner (nodeFile);
     
-        String firstline = scanner.nextLine();
+        String firstline = nodeScanner.nextLine();
         String[] parts = firstline.split(" ");
         int sizeX = Integer.parseInt(parts[0]);
         int sizeY = Integer.parseInt(parts[1]);
+
         Graph graph = new Graph(sizeX, sizeY);
-        int edgeCount = 0;
-        while(scanner.hasNextLine()){
-            String[] line = scanner.nextLine().split(" ");
-            Edge newEdge = new Edge(line[0], Integer.parseInt(line[1]));
+
+        while(nodeScanner.hasNextLine()){
+            String[] line = nodeScanner.nextLine().split(" ");
+            String ID = line[0] + "-" +line[1];
+            Node newNode = new Node(ID,Integer.parseInt(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]));
+            graph.addNode(newNode);
+        }
+        nodeScanner.close();
+        
+        
+        
+        
+        
+        
+        
+        // Edge reading and adding to the graph
+        File edgeFile = new File(edgeFilePath);
+        Scanner edgeScanner = new Scanner (edgeFile);
+        while(edgeScanner.hasNextLine()){
+
+            String[] line = edgeScanner.nextLine().split(" ");
+            Edge newEdge = new Edge(line[0], Double.parseDouble(line[1]));
             graph.addEdge(newEdge);
-            System.out.println("Edge added: " + newEdge.getId() + " with weight: " + newEdge.getWeight());
-            edgeCount++;
-
 
         }
-        scanner.close();
-        for(int i = 0; i < sizeX; i++){
-            for(int j = 0; j < sizeY; j++){
-                Node newNode = new Node(i + "-" + j, i, j, 0);
-                graph.addNode(newNode);
+        edgeScanner.close();
 
-            }
-        }
+        
 
-        System.out.println(edgeCount );
         ArrayList<String> path = Dijkstra.findPath(graph, "0-0", "3-3");
     
         for(String nodeID: path){
