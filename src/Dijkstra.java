@@ -66,7 +66,8 @@ public class Dijkstra {
         }
         ArrayList<String> path = new ArrayList<>();
         if (!isFound) {
-            path.add("No path found");
+            System.out.println("No path found");
+            System.exit(-1);
             return path;
         }
         Node current = nodesMap.get(endID);

@@ -39,24 +39,35 @@ public class Player {
                     nextPerimeter = los.moveLeft();
                 }
             }
-            // update the knownGraph
-            for (CoordinateTuple node : nextPerimeter) {
-                Project.knownGraph.getNodes().get(node.x + "-" + node.y).setType(Project.dataGraph.getNodes().get(node.x + "-" + node.y).getType());
-            }
             
-            //check for collisions with path
+            boolean collision = false;
             for (CoordinateTuple node : nextPerimeter) {
                 String id = node.x + "-" + node.y;
-                if (Project.dataGraph.getNodes().get(id).getType() < 2) {
+                
+                //TODO: suspicious code
+                if (Project.knownGraph.getNodes().get(id).getType() >= 2) {
                     continue;
-                }   
-                if (Project.nodesInPath.contains(id)) {
-                    System.out.println("Collision with path");
-                    CoordinateTuple output = new CoordinateTuple(currentX, currentY);
-                    return output;
                 }
 
+                // update the knownGraph
+                Project.knownGraph.getNodes().get(id).setType(Project.dataGraph.getNodes().get(id).getType());
+                
+                //check for collisions with path
+                
+                if (Project.dataGraph.getNodes().get(id).getType() < 2) {
+                    continue;
+                }
+
+                if (Project.nodesInPath.contains(id)) {
+                    System.out.println("Collision with path");
+                    collision = true;
+                }
             }
+            if (collision) {
+                CoordinateTuple output = new CoordinateTuple(currentX, currentY);
+                return output;
+            }
+            
         }
         CoordinateTuple output = new CoordinateTuple(currentX, currentY);
         return output;
