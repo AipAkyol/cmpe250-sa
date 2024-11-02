@@ -1,11 +1,14 @@
 import java.io.File;
 import java.util.Scanner;
 
-import javax.sound.sampled.Line;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Project {
+    public static Graph dataGraph;
+    public static Graph knownGraph;
+    public static HashSet<String> nodesInPath = new HashSet<>();
    
     public static void main(String[] args) throws Exception {
         
@@ -15,6 +18,13 @@ public class Project {
         // starting point
         int currentX = 0;
         int currentY = 0;
+
+        // ending point
+        int endX = 3;
+        int endY = 3;
+
+        // line of sight radius
+        int losRadius = 2;
         
         
         File nodeFile = new File(nodeFilePath);
@@ -25,8 +35,8 @@ public class Project {
         int sizeX = Integer.parseInt(parts[0]);
         int sizeY = Integer.parseInt(parts[1]);
 
-        Graph dataGraph = new Graph(sizeX, sizeY);
-        Graph knownGraph = new Graph(sizeX, sizeY);
+        dataGraph = new Graph(sizeX, sizeY);
+        knownGraph = new Graph(sizeX, sizeY);
 
         while(nodeScanner.hasNextLine()){
             String[] line = nodeScanner.nextLine().split(" ");
@@ -35,7 +45,7 @@ public class Project {
             dataGraph.addNode(newNode);
 
             if (Integer.parseInt(line[2]) == 1){
-                knownGraph.addNode(new Node(ID,Integer.parseInt(line[0]), Integer.parseInt(line[1]), 0));
+                knownGraph.addNode(new Node(ID,Integer.parseInt(line[0]), Integer.parseInt(line[1]), 1));
             }
             else {
                 // player initially does not know the type of the node if its bigger than 1
@@ -65,15 +75,48 @@ public class Project {
         }
         edgeScanner.close();
 
-        LineOfSight los = new LineOfSight(2, 0, 0);
+        LineOfSight los = new LineOfSight(losRadius, currentX, currentY, sizeX, sizeY);
         
+        // add all nodes in the line of sight to the knownGraph
+        ArrayList<CoordinateTuple> allInitialyKnownNodes = los.calculateInitialArea();
 
-        
+        for(CoordinateTuple node: allInitialyKnownNodes){
+            knownGraph.getNodes().get(node.x + "-" + node.y).setType(dataGraph.getNodes().get(node.x + "-" + node.y).getType());
+        }
+
+
+        // initial path finding
         String startID = currentX + "-" + currentY;
-        ArrayList<String> path = Dijkstra.findPath(knownGraph, startID, "3-3");
-    
-        for(String nodeID: path){
-            System.out.println(nodeID);
+        String endID = endX + "-" + endY;
+        ArrayList<String> path = Dijkstra.findPath(knownGraph, startID, endID);
+
+
+        // create a player object
+        Player player = new Player(los, path);
+        
+        // moving the player
+        CoordinateTuple lastPosition = player.move();
+        
+        // update position
+        currentX = lastPosition.x;
+        currentY = lastPosition.y;
+
+        // check if the player is not at the end
+        while (currentX != endX || currentY != endY){
+            
+            // path finding again  
+            path = Dijkstra.findPath(knownGraph, currentX + "-" + currentY, endX + "-" + endY);
+            
+            // update the path
+            player.currentPath = path;
+
+            // move the player
+            lastPosition = player.move();
+
+            // update position
+            currentX = lastPosition.x;
+            currentY = lastPosition.y;
+
         }
 
         

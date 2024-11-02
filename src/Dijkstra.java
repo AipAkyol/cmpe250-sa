@@ -72,6 +72,7 @@ public class Dijkstra {
         Node current = nodesMap.get(endID);
         while (current != null) {
             path.add(current.getId());
+            Project.nodesInPath.add(current.getId());
             current = current.getParent();
         }
         Collections.reverse(path);

@@ -14,10 +14,12 @@ public class LineOfSight {
     ArrayList<CoordinateTuple> topPerimeterNodes = new ArrayList<>(); //nodes on the top perimeter of the circle
     ArrayList<CoordinateTuple> bottomPerimeterNodes = new ArrayList<>(); //nodes on the bottom perimeter of the circle
 
-    public LineOfSight(int radius, int currentX, int currentY) {
+    public LineOfSight(int radius, int currentX, int currentY, int sizeX, int sizeY) {
         this.radius = radius;
         this.currentX = currentX;
         this.currentY = currentY;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
 
         //find the perimeter nodes
         
@@ -87,7 +89,7 @@ public class LineOfSight {
         ArrayList<CoordinateTuple> output = new ArrayList<>();
         //boundary check for right perimeter nodes
         for (CoordinateTuple node: rightPerimeterNodes){
-            if (node.x < sizeX){
+            if (node.x >= 0 && node.x < sizeX && node.y >= 0 && node.y < sizeY){
                 output.add(node);
             }
         }
@@ -115,7 +117,7 @@ public class LineOfSight {
         ArrayList<CoordinateTuple> output = new ArrayList<>();
         //boundary check for left perimeter nodes
         for (CoordinateTuple node: leftPerimeterNodes){
-            if (node.x >= 0){
+            if (node.x >= 0 && node.x < sizeX && node.y >= 0 && node.y < sizeY){
                 output.add(node);
             }
         }
@@ -143,7 +145,7 @@ public class LineOfSight {
         ArrayList<CoordinateTuple> output = new ArrayList<>();
         //boundary check for top perimeter nodes
         for (CoordinateTuple node: topPerimeterNodes){
-            if (node.y < sizeY){
+            if (node.x >= 0 && node.x < sizeX && node.y >= 0 && node.y < sizeY){
                 output.add(node);
             }
         }
@@ -171,11 +173,37 @@ public class LineOfSight {
         ArrayList<CoordinateTuple> output = new ArrayList<>();
         //boundary check for bottom perimeter nodes
         for (CoordinateTuple node: bottomPerimeterNodes){
-            if (node.y >= 0){
+            if (node.x >= 0 && node.x < sizeX && node.y >= 0 && node.y < sizeY){
                 output.add(node);
             }
         }
 
         return output;
     }
+
+    public ArrayList<CoordinateTuple> calculateInitialArea (){
+        //calculate the initial area of the line of sight
+        ArrayList<CoordinateTuple> output = new ArrayList<>();
+        for (int i = 0; i < topPerimeterNodes.size(); i++){
+            int currentY = topPerimeterNodes.get(i).y;
+            int currentX = topPerimeterNodes.get(i).x;
+            int endY = bottomPerimeterNodes.get(i).y;
+            output.add(new CoordinateTuple(currentX, currentY));
+            while (currentY > endY){
+                currentY--;
+                output.add(new CoordinateTuple(currentX, currentY));
+            }
+        }
+        //boundary check
+        ArrayList<CoordinateTuple> boundaryCheckedOutput = new ArrayList<>();
+        for (CoordinateTuple node: output){
+            if (node.x >= 0 && node.x < sizeX && node.y >= 0 && node.y < sizeY){
+                boundaryCheckedOutput.add(node);
+            }
+        }
+        return boundaryCheckedOutput;
+    }
+
+
+
 }
