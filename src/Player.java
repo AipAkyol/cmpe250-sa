@@ -7,9 +7,9 @@ public class Player {
     int currentX;
     int currentY;
 
-    public Player(LineOfSight los, ArrayList<String> currentPath) {
+    public Player(LineOfSight los) {
         this.los = los;
-        this.currentPath = currentPath;
+        this.currentPath = new ArrayList<>();
     }
 
     public CoordinateTuple move() {

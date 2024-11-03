@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public class Project {
     public static Graph dataGraph;
@@ -14,24 +15,15 @@ public class Project {
         
         String nodeFilePath = "C:\\BOUN\\cmpe250-sa\\src\\node-4-4.txt";
         String edgeFilePath = "C:\\BOUN\\cmpe250-sa\\src\\4-4.txt";
+        String objectivesFilePath = "C:\\BOUN\\cmpe250-sa\\src\\objectives.txt";
 
-        // starting point
-        int currentX = 0;
-        int currentY = 0;
-
-        // ending point
-        int endX = 3;
-        int endY = 3;
-
-        // line of sight radius
-        int losRadius = 2;
         
         
         File nodeFile = new File(nodeFilePath);
         Scanner nodeScanner = new Scanner (nodeFile);
     
-        String firstline = nodeScanner.nextLine();
-        String[] parts = firstline.split(" ");
+        String firstNodeLine = nodeScanner.nextLine();
+        String[] parts = firstNodeLine.split(" ");
         int sizeX = Integer.parseInt(parts[0]);
         int sizeY = Integer.parseInt(parts[1]);
 
@@ -56,11 +48,6 @@ public class Project {
         nodeScanner.close();
         
         
-        
-        
-        
-        
-        
         // Edge reading and adding to the dataGraph
         File edgeFile = new File(edgeFilePath);
         Scanner edgeScanner = new Scanner (edgeFile);
@@ -75,6 +62,38 @@ public class Project {
         }
         edgeScanner.close();
 
+
+        // Objective reading
+        File objectivesFile = new File(objectivesFilePath);
+        Scanner objectivesScanner = new Scanner (objectivesFile);
+        int firstObjLine = Integer.parseInt(objectivesScanner.nextLine());
+        String[] secondObjLine = objectivesScanner.nextLine().split(" ");
+        ArrayList<CoordinateTuple> objectives = new ArrayList<>();
+        ArrayList<LinkedList<Integer>> switches = new ArrayList<>();
+        while (objectivesScanner.hasNextLine()){
+            String[] line = objectivesScanner.nextLine().split(" ");
+            CoordinateTuple newObjective = new CoordinateTuple(Integer.parseInt(line[0]), Integer.parseInt(line[1]));
+            objectives.add(newObjective);
+            LinkedList<Integer> newSwitch = new LinkedList<>();
+            if (line.length > 2){
+                for (int i = 2; i < line.length; i++){
+                    newSwitch.add(Integer.parseInt(line[i]));
+                }
+            }
+            else {
+                newSwitch.add(-1); // if there is no switch, add -1 for index parallelism
+            }
+            switches.add(newSwitch);
+        }
+        objectivesScanner.close();
+
+        // line of sight radius
+        int losRadius = firstObjLine;
+
+        // starting point
+        int currentX = Integer.parseInt(secondObjLine[0]);
+        int currentY = Integer.parseInt(secondObjLine[1]);
+
         LineOfSight los = new LineOfSight(losRadius, currentX, currentY, sizeX, sizeY);
         
         // add all nodes in the line of sight to the knownGraph
@@ -85,42 +104,44 @@ public class Project {
         }
 
 
-        // initial path finding
-        String startID = currentX + "-" + currentY;
-        String endID = endX + "-" + endY;
-        ArrayList<String> path = Dijkstra.findPath(knownGraph, startID, endID);
-
-
         // create a player object
-        Player player = new Player(los, path);
-        
-        // moving the player
-        CoordinateTuple lastPosition = player.move();
-        
-        // update position
-        currentX = lastPosition.x;
-        currentY = lastPosition.y;
+        Player player = new Player(los);
 
-        // check if the player is not at the end
-        while (currentX != endX || currentY != endY){
+        int endX;
+        int endY;
+
+        for (int i=0; i<objectives.size(); i++){
+
+            // set the end point
+            endX = objectives.get(i).x;
+            endY = objectives.get(i).y;
             
-            // path finding again  
-            path = Dijkstra.findPath(knownGraph, currentX + "-" + currentY, endX + "-" + endY);
+            // check if the player is not at the end
+            while (currentX != endX || currentY != endY){
             
-            // update the path
-            player.currentPath = path;
+                // path finding again  
+                ArrayList<String> path = Dijkstra.findPath(knownGraph, currentX + "-" + currentY, endX + "-" + endY);
+                
 
-            // move the player
-            lastPosition = player.move();
+                // update the path
+                player.currentPath = path;
 
-            // update position
-            currentX = lastPosition.x;
-            currentY = lastPosition.y;
+                // move the player
+                CoordinateTuple lastPosition = player.move();
+
+                // update position
+                currentX = lastPosition.x;
+                currentY = lastPosition.y;
+            
+            }
+            System.out.println("Objective " + i + " reached!");
+
+            //TODO: implement swtiiches here
+            LinkedList<Integer> switchList = switches.get(i);
+
+
+        
 
         }
-
-        
-
-        
     }
 }
