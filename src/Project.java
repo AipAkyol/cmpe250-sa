@@ -10,6 +10,7 @@ public class Project {
     public static Graph dataGraph;
     public static Graph knownGraph;
     public static HashSet<String> nodesInPath = new HashSet<>();
+    public static ArrayList<Integer> closedSwitches = new ArrayList<>();
    
     public static void main(String[] args) throws Exception {
         
@@ -136,12 +137,73 @@ public class Project {
             }
             System.out.println("Objective " + i + " reached!");
 
-            //TODO: implement swtiiches here
+            
             LinkedList<Integer> switchList = switches.get(i);
+
+            // if there is a switch
+            // TODO: in case of equal weights, the smaller switch number is chosen, add this to description
+            if (switchList.get(0) != -1){
+                Integer minSwitch = null;
+                Double minWeight = Double.MAX_VALUE;
+                for (int j = 0; j < switchList.size(); j++){
+                    if (closedSwitches.contains(switchList.get(j))){ // if the switch is already closed, skip it
+                        continue;
+                    }
+                    int switchType = switchList.get(j);
+                    String nextObjId = objectives.get(i+1).x + "-" + objectives.get(i+1).y;
+                    Double weight = calculateWeightWhenSwitched(currentX + "-" + currentY, nextObjId, switchType);
+                    if (weight < minWeight){
+                        minWeight = weight;
+                        minSwitch = switchType;
+                    }
+                }
+                if (minSwitch != null){ // if there is a switch to close
+
+                    // close the switch here in dataGraph and knownGraph
+                    closedSwitches.add(minSwitch);
+
+                    for (Node node: dataGraph.getNodes().values()){
+                        if (node.getType() == minSwitch){
+                            node.setType(0); // node is passable now
+                        }
+                    }
+                    for (Node node: knownGraph.getNodes().values()){
+                        if (node.getType() == minSwitch){
+                            node.setType(0); // node is passable now
+                        }
+                    }
+                    System.out.println("Switch " + minSwitch + " closed!");
+                }
+            }
 
 
         
 
         }
+    }
+
+    public static Double calculateWeightWhenSwitched(String startId, String endId, int switchType) {
+        
+        ArrayList<String> nodesClosed = new ArrayList<>(); // to reopen them after the calculation
+        
+        // close all nodes in the known graph that have the switchType
+        for (Node node: knownGraph.getNodes().values()){
+            if (node.getType() == switchType){
+                nodesClosed.add(node.getId());
+                node.setType(0); // node is passable now
+            }
+        }
+        
+        // run the dijkstra for weight calculation
+        Dijkstra.findPath(knownGraph, startId, endId);
+        // get the weight of end node
+        Double weight = knownGraph.getNodes().get(endId).getCost();
+        
+        // reopen the nodes
+        for (String nodeId: nodesClosed){
+            knownGraph.getNodes().get(nodeId).setType(switchType);
+        }
+        
+        return weight;
     }
 }
