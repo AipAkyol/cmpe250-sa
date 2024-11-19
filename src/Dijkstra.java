@@ -34,6 +34,7 @@ public class Dijkstra {
                 // close the program
                 System.exit(-1);
             }
+            //TODO: if visited atla??? 
 
             visited.add(current);
             if (current.getId().equals(endID)) {

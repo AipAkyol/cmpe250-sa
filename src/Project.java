@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+
+
 public class Project {
     public static Graph dataGraph;
     public static Graph knownGraph;
@@ -13,10 +15,17 @@ public class Project {
     public static ArrayList<Integer> closedSwitches = new ArrayList<>();
    
     public static void main(String[] args) throws Exception {
+
+        //TODO: test the classical implementation of Dijkstra with test 1000 files, my implementation was 225 seconds, switch 3 closed.
+
+        // time
+        long startTime = System.currentTimeMillis();
+
         
-        String nodeFilePath = "C:\\BOUN\\cmpe250-sa\\src\\node-4-4.txt";
-        String edgeFilePath = "C:\\BOUN\\cmpe250-sa\\src\\4-4.txt";
-        String objectivesFilePath = "C:\\BOUN\\cmpe250-sa\\src\\objectives.txt";
+        
+        String nodeFilePath = "C:\\BOUN\\cmpe250-sa\\nodes.txt";
+        String edgeFilePath = "C:\\BOUN\\cmpe250-sa\\edges.txt";
+        String objectivesFilePath = "C:\\BOUN\\cmpe250-sa\\src\\objectives-1000-1000.txt";
 
         
         
@@ -180,6 +189,10 @@ public class Project {
         
 
         }
+        // time
+        long endTime = System.currentTimeMillis();
+        // SECONDS
+        System.out.println("Execution time: " + (endTime - startTime) / 1000 + " seconds");
     }
 
     public static Double calculateWeightWhenSwitched(String startId, String endId, int switchType) {

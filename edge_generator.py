@@ -5,16 +5,16 @@
 
 import random
 
-size_x = 4
-size_y = 4
+size_x = 1000
+size_y = 1000
 
 def generate_edges():
     for i in range(size_x):
         for j in range(size_y):
             if i < size_x - 1:
-                yield f'{i}-{j},{i+1}-{j} {random.uniform(0, 9):.4f}'
+                yield f'{i}-{j},{i+1}-{j} {random.uniform(0, 99999):.6f}'
             if j < size_y - 1:
-                yield f'{i}-{j},{i}-{j+1} {random.uniform(0, 9):.4f}'
+                yield f'{i}-{j},{i}-{j+1} {random.uniform(0, 99999):.6f}'
 
 with open('edges.txt', 'w') as f:
     for edge in generate_edges():

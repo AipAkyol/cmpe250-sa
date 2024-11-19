@@ -6,11 +6,11 @@
 
 import random
 
-density_0 = 80
-density_1 = 20
+types = [0, 1, 2, 3]
 
-size_x = 4
-size_y = 4
+densities = [ 80, 10, 5, 5]
+size_x = 1000
+size_y = 1000
 
 # write the sizes of the grid to the first line of the file
 with open('nodes.txt', 'w') as f:
@@ -19,7 +19,7 @@ with open('nodes.txt', 'w') as f:
 def generate_nodes():
     for i in range(size_x):
         for j in range(size_y):
-            node_type = 0 if random.randint(0, 100) < density_0 else 1
+            node_type = random.choices(types, densities)[0]
             yield f'{i} {j} {node_type}'
 
 with open('nodes.txt', 'a') as f:
