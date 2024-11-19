@@ -13,6 +13,8 @@ public class Project {
     public static Graph knownGraph;
     public static HashSet<String> nodesInPath = new HashSet<>();
     public static ArrayList<Integer> closedSwitches = new ArrayList<>();
+
+    public static Double dijkstraWeight = 0.0;
    
     public static void main(String[] args) throws Exception {
 
@@ -25,7 +27,7 @@ public class Project {
         
         String nodeFilePath = "C:\\BOUN\\cmpe250-sa\\nodes.txt";
         String edgeFilePath = "C:\\BOUN\\cmpe250-sa\\edges.txt";
-        String objectivesFilePath = "C:\\BOUN\\cmpe250-sa\\src\\objectives-1000-1000.txt";
+        String objectivesFilePath = "C:\\BOUN\\cmpe250-sa\\src\\obj.txt";
 
         
         
@@ -147,6 +149,8 @@ public class Project {
             System.out.println("Objective " + i + " reached!");
 
             
+
+            
             LinkedList<Integer> switchList = switches.get(i);
 
             // if there is a switch
@@ -154,6 +158,7 @@ public class Project {
             if (switchList.get(0) != -1){
                 Integer minSwitch = null;
                 Double minWeight = Double.MAX_VALUE;
+                Double secondMinWeight = Double.MAX_VALUE;
                 for (int j = 0; j < switchList.size(); j++){
                     if (closedSwitches.contains(switchList.get(j))){ // if the switch is already closed, skip it
                         continue;
@@ -161,10 +166,17 @@ public class Project {
                     int switchType = switchList.get(j);
                     String nextObjId = objectives.get(i+1).x + "-" + objectives.get(i+1).y;
                     Double weight = calculateWeightWhenSwitched(currentX + "-" + currentY, nextObjId, switchType);
-                    if (weight < minWeight){
+                    if (weight <= minWeight){
+                        secondMinWeight = minWeight;
                         minWeight = weight;
                         minSwitch = switchType;
                     }
+                }
+                final double TOLERANCE = 1e-9; // or any small value appropriate for your use case
+                if (Math.abs(minWeight - secondMinWeight) < TOLERANCE) {
+                    System.out.println("Two minimum weights are equal, solution is not unique!");
+                    // close the program
+                    System.exit(-1);
                 }
                 if (minSwitch != null){ // if there is a switch to close
 
@@ -210,7 +222,7 @@ public class Project {
         // run the dijkstra for weight calculation
         Dijkstra.findPath(knownGraph, startId, endId);
         // get the weight of end node
-        Double weight = knownGraph.getNodes().get(endId).getCost();
+        Double weight = dijkstraWeight;
         
         // reopen the nodes
         for (String nodeId: nodesClosed){

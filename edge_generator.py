@@ -1,12 +1,12 @@
 #this is a generator for edges that will be used in some grid graph
 #format is:
-#x1-x2,x2-y2 {edge weight as floats with 4 digits significance between 0 and 9}
+#x1-x2,x2-y2 {edge weight as floats with 6 digits significance between 0 and 99999}
 #write the edges to a file and then use the file as input to the graph
 
 import random
 
-size_x = 1000
-size_y = 1000
+size_x = 5
+size_y = 5
 
 def generate_edges():
     for i in range(size_x):

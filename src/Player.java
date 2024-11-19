@@ -59,11 +59,11 @@ public class Player {
                 }
 
                 if (Project.nodesInPath.contains(id)) {
-                    System.out.println("Collision with path");
                     collision = true;
                 }
             }
             if (collision) {
+                System.out.println("Collision with path");
                 CoordinateTuple output = new CoordinateTuple(currentX, currentY);
                 return output;
             }
