@@ -63,7 +63,7 @@ public class Player {
                 }
             }
             if (collision) {
-                System.out.println("Collision with path");
+                System.out.println("Path is impassable!");
                 CoordinateTuple output = new CoordinateTuple(currentX, currentY);
                 return output;
             }

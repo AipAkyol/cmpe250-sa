@@ -8,9 +8,9 @@ import random
 
 types = [0, 1, 2, 3]
 
-densities = [ 60, 20, 10, 10]
-size_x = 5
-size_y = 5
+densities = [ 80, 10, 5, 5]
+size_x = 400
+size_y = 400
 
 # write the sizes of the grid to the first line of the file
 with open('nodes.txt', 'w') as f:

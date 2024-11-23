@@ -27,7 +27,7 @@ public class Project {
         
         String nodeFilePath = "C:\\BOUN\\cmpe250-sa\\nodes.txt";
         String edgeFilePath = "C:\\BOUN\\cmpe250-sa\\edges.txt";
-        String objectivesFilePath = "C:\\BOUN\\cmpe250-sa\\src\\obj.txt";
+        String objectivesFilePath = "C:\\BOUN\\cmpe250-sa\\src\\obj-400-400.txt";
 
         
         
@@ -146,7 +146,8 @@ public class Project {
                 currentY = lastPosition.y;
             
             }
-            System.out.println("Objective " + i + " reached!");
+            int objNumber = i+1;
+            System.out.println("Objective " + objNumber + " reached!");
 
             
 
@@ -193,7 +194,7 @@ public class Project {
                             node.setType(0); // node is passable now
                         }
                     }
-                    System.out.println("Switch " + minSwitch + " closed!");
+                    System.out.println("Number " + minSwitch + " is chosen!");
                 }
             }
 
