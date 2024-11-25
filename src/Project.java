@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 
@@ -17,17 +19,23 @@ public class Project {
     public static Double dijkstraWeight = 0.0;
    
     public static void main(String[] args) throws Exception {
+        // Save the original System.out
+        PrintStream originalOut = System.out;
 
-        //TODO: test the classical implementation of Dijkstra with test 1000 files, my implementation was 225 seconds, switch 3 closed.
-
+        try {
+            PrintStream fileOut = new PrintStream(new File("output.txt"));
+            System.setOut(fileOut);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         // time
         long startTime = System.currentTimeMillis();
 
         
         
-        String nodeFilePath = "C:\\BOUN\\cmpe250-sa\\nodes.txt";
-        String edgeFilePath = "C:\\BOUN\\cmpe250-sa\\edges.txt";
-        String objectivesFilePath = "C:\\BOUN\\cmpe250-sa\\src\\obj-400-400.txt";
+        String nodeFilePath = args[0];
+        String edgeFilePath = args[1];
+        String objectivesFilePath = args[2];
 
         
         
@@ -204,6 +212,9 @@ public class Project {
         }
         // time
         long endTime = System.currentTimeMillis();
+        // ptint time to console so setout should go to console
+        System.setOut(originalOut);
+        
         // SECONDS
         System.out.println("Execution time: " + (endTime - startTime) / 1000 + " seconds");
     }
