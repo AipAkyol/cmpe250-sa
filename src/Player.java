@@ -59,10 +59,13 @@ public class Player {
                 }
 
                 if (Project.nodesInPath.contains(id)) {
+                    //System.out.println(id);
                     collision = true;
                 }
             }
             if (collision) {
+                //System.out.println(currentPath);
+                //System.out.println(Project.nodesInPath);
                 System.out.println("Path is impassable!");
                 CoordinateTuple output = new CoordinateTuple(currentX, currentY);
                 return output;

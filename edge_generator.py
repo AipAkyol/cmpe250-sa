@@ -5,8 +5,8 @@
 
 import random
 
-size_x = 32
-size_y = 32
+size_x = 128
+size_y = 128
 
 def generate_edges():
     for i in range(size_x):

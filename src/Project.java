@@ -119,7 +119,7 @@ public class Project {
         // add all nodes in the line of sight to the knownGraph
         ArrayList<CoordinateTuple> allInitialyKnownNodes = los.calculateInitialArea();
 
-        for(CoordinateTuple node: allInitialyKnownNodes){
+        for(CoordinateTuple node: allInitialyKnownNodes){            
             knownGraph.getNodes().get(node.x + "-" + node.y).setType(dataGraph.getNodes().get(node.x + "-" + node.y).getType());
         }
 
@@ -138,7 +138,9 @@ public class Project {
             
             // check if the player is not at the end
             while (currentX != endX || currentY != endY){
-            
+                
+                // make nodes in path cleared
+                nodesInPath.clear();
                 // path finding again  
                 ArrayList<String> path = Dijkstra.findPath(knownGraph, currentX + "-" + currentY, endX + "-" + endY);
                 
