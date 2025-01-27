@@ -172,6 +172,7 @@ public class Project {
                 Double secondMinWeight = Double.MAX_VALUE;
                 for (int j = 0; j < switchList.size(); j++){
                     if (closedSwitches.contains(switchList.get(j))){ // if the switch is already closed, skip it
+                        System.out.println("Switch " + switchList.get(j) + " is already closed!");
                         continue;
                     }
                     int switchType = switchList.get(j);
